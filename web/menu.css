@@ -16,7 +16,8 @@
   font-family: Arial;
   color: #dce6f2;
   font-size: 11px;
-  
+  width: 30px;
+  height: 20px;
   padding: 14px 20px 10px 20px;
   text-decoration: none;
 }
@@ -37,6 +38,6 @@
 }
 .menu a{
     display: block;
-    width: 70px;
-     text-decoration: none;
+    text-decoration: none;
+        margin-left: -2px;
 }
