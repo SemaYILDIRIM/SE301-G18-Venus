@@ -1,0 +1,187 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema Venus
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema Venus
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `Venus` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `Venus` ;
+
+-- -----------------------------------------------------
+-- Table `Venus`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `name` VARCHAR(45) NULL COMMENT '',
+  `surname` VARCHAR(45) NULL COMMENT '',
+  `role` VARCHAR(45) NULL COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `updateDate` DATE NULL COMMENT '',
+  `status` INT(2) NULL COMMENT '',
+  `photoPath` LONGTEXT NULL COMMENT '',
+  `email` VARCHAR(45) NULL COMMENT '',
+  `password` VARCHAR(50) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`project`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`project` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `discription` MEDIUMTEXT NULL COMMENT '',
+  `name` VARCHAR(45) NULL COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `type` VARCHAR(45) NULL COMMENT '',
+  `priority` INT NULL COMMENT '',
+  `dueDate` DATE NULL COMMENT '',
+  `manager` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_project_user1_idx` (`manager` ASC)  COMMENT '',
+  CONSTRAINT `fk_project_user1`
+    FOREIGN KEY (`manager`)
+    REFERENCES `Venus`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`issue`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`issue` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `summary` MEDIUMTEXT NULL COMMENT '',
+  `description` MEDIUMTEXT NULL COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `updateDate` DATE NULL COMMENT '',
+  `type` VARCHAR(45) NULL COMMENT '',
+  `project_id` INT NOT NULL COMMENT '',
+  `creatoruserID` INT NULL COMMENT '',
+  `status` VARCHAR(45) NULL COMMENT '',
+  `priority` INT NULL COMMENT '',
+  `assignee` INT NOT NULL COMMENT '',
+  `dueDate` DATE NULL COMMENT '',
+  PRIMARY KEY (`id`, `project_id`, `assignee`)  COMMENT '',
+  INDEX `fk_issue_project1_idx` (`project_id` ASC)  COMMENT '',
+  INDEX `fk_issue_user1_idx` (`creatoruserID` ASC)  COMMENT '',
+  INDEX `fk_issue_user2_idx` (`assignee` ASC)  COMMENT '',
+  CONSTRAINT `fk_issue_project1`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `Venus`.`project` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_issue_user1`
+    FOREIGN KEY (`creatoruserID`)
+    REFERENCES `Venus`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_issue_user2`
+    FOREIGN KEY (`assignee`)
+    REFERENCES `Venus`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`attachment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`attachment` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `documentpath` TEXT NULL COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `issue_id` INT NOT NULL COMMENT '',
+  `issue_project_id` INT NOT NULL COMMENT '',
+  `issue_assignee` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_attachment_issue1_idx` (`issue_id` ASC, `issue_project_id` ASC, `issue_assignee` ASC)  COMMENT '',
+  CONSTRAINT `fk_attachment_issue1`
+    FOREIGN KEY (`issue_id` , `issue_project_id` , `issue_assignee`)
+    REFERENCES `Venus`.`issue` (`id` , `project_id` , `assignee`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`comment` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `comment` LONGTEXT NULL COMMENT '',
+  `issue_id` INT NOT NULL COMMENT '',
+  `issue_project_id` INT NOT NULL COMMENT '',
+  `issue_assignee` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_comment_issue1_idx` (`issue_id` ASC, `issue_project_id` ASC, `issue_assignee` ASC)  COMMENT '',
+  CONSTRAINT `fk_comment_issue1`
+    FOREIGN KEY (`issue_id` , `issue_project_id` , `issue_assignee`)
+    REFERENCES `Venus`.`issue` (`id` , `project_id` , `assignee`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`projectUser`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`projectUser` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `creationDate` DATE NULL COMMENT '',
+  `project_id` INT NOT NULL COMMENT '',
+  `user_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_projectUser_project1_idx` (`project_id` ASC)  COMMENT '',
+  INDEX `fk_projectUser_user1_idx` (`user_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_projectUser_project1`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `Venus`.`project` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_projectUser_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `Venus`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Venus`.`issueHistory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Venus`.`issueHistory` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `user_id` INT NOT NULL COMMENT '',
+  `issue_id` INT NOT NULL COMMENT '',
+  `issue_project_id` INT NOT NULL COMMENT '',
+  `issue_assignee` INT NOT NULL COMMENT '',
+  `updateDate` DATE NULL COMMENT '',
+  PRIMARY KEY (`id`, `user_id`)  COMMENT '',
+  INDEX `fk_issueHistory_user1_idx` (`user_id` ASC)  COMMENT '',
+  INDEX `fk_issueHistory_issue1_idx` (`issue_id` ASC, `issue_project_id` ASC, `issue_assignee` ASC)  COMMENT '',
+  CONSTRAINT `fk_issueHistory_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `Venus`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_issueHistory_issue1`
+    FOREIGN KEY (`issue_id` , `issue_project_id` , `issue_assignee`)
+    REFERENCES `Venus`.`issue` (`id` , `project_id` , `assignee`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
