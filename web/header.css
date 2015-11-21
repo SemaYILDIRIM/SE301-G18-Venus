@@ -101,7 +101,13 @@ form{
 .left{
     height: 95%;
     width: 40px;
-    background-color: #79a7d2;
+    background: #cccccc;
+  background-image: -webkit-linear-gradient(bottom, #ffffff, #cccccc);
+  background-image: -moz-linear-gradient(bottom, #ffffff, #cccccc);
+  background-image: -ms-linear-gradient(bottom, #ffffff, #cccccc);
+  background-image: -o-linear-gradient(bottom, #ffffff, #cccccc);
+  background-image: linear-gradient(bottom to, #ffffff, #cccccc);
+  text-decoration: none;
 }
 .left img {
     margin-top: 30px;

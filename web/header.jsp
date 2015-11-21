@@ -16,9 +16,10 @@
                 <div class="header">
                     <img class="img" src="http://icons.iconarchive.com/icons/zairaam/bumpy-planets/256/09-uranus-icon.png" alt="Mountain View">
                     <div> <ul class="menu"><li><a href="#">Home</a></li>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Home</a>
-                            </li></ul></div>
+                            <li><a href="#">Projects</a></li>
+                            <li><a href="#">Issue</a></li>
+                            <li><a href="#">Create Issue</a></li>
+                        </ul></div>
                     <div class="profile" onmouseout="hide()" onmouseover="show()" >
                         <img src="<%=user.getpicture(s.getAttribute("email").toString())%>" alt="">
                         <div id="profileoption"  style="visibility: hidden;">
